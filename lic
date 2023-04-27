@@ -1,0 +1,55 @@
+#!/bin/sh
+
+set -e
+
+# Define an alias dictionary for common licenses
+declare -A license_aliases
+license_aliases=(
+  ["mit"]="MIT"
+  ["gpl"]="GPLv3"
+  ["gplv3"]="GPLv3"
+  ["gpl3"]="GPLv3"
+  ["gpl2"]="GPLv2"
+  ["apache"]="APAC"
+  ["mpl2"]="MPL2"
+  ["moz"]="MPL2"
+  ["boost"]="BOOST"
+  ["lgpl"]="LGPL"
+  ["pubd"]="Unlicense"
+  ["unli"]="Unlicense"
+  ["Unlicense"]="Unlicense"
+  ["BSDv3"]="BSD3"
+  ["bsd3"]="BSD3"
+  ["bsdv3"]="BSD3"
+)
+
+# Check if the user has provided an argument
+if [ -z "$1" ]; then
+  echo "Usage: lic <license>"
+  echo "The current supported licenses are:"
+  ls -1 "${HOME}/.local/share/lic" | sed 's/\.txt$//'
+  exit 1
+fi
+
+# Get the actual license name
+license="${license_aliases[$1]:-$1}"
+
+# Define the license source folder
+license_src_folder="${HOME}/.local/share/lic"
+
+# Check if the license file with .txt extension exists in the source folder
+if [ ! -f "${license_src_folder}/${license}.txt" ]; then
+  echo "Error: License '${license}' not found in ${license_src_folder}."
+  exit 1
+fi
+
+# Copy the license file with .txt extension to the current directory as LICENSE
+cp "${license_src_folder}/${license}.txt" "./LICENSE"
+
+echo "The '${license}' license has been successfully copied to the current directory."
+
+# If argument is MIT then print a warning message in the color yellow
+if [ "$license" = "MIT" ]; then
+  echo -e "\e[33mRemember to edit the License with your name and the current year.\e[0m"
+fi
+
