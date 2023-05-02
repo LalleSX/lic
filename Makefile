@@ -4,7 +4,7 @@ licloc:
 
 install: licloc
 	@echo "Installing..."
-	chmod +x ./lic
+	chmod +x ./src/lic
 	cp lic ~/.local/bin/
 
 .PHONY: install
